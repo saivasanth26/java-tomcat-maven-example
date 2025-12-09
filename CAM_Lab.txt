@@ -10,13 +10,12 @@
 172.18.181.53 msis.kubenode2.com
 
 *Generating RSA key on master
- ssh-keygen -t rsa -b 4096
- enter enter enter
-Once the key is generated, copy or push it to slave noddes.
- ssh-copy-id user@slave1
- ssh-copy-id user@slave2
+ >> ssh-keygen -t rsa -b 4096
+ >> ssh-copy-id user@slave1
+ >> ssh-copy-id user@slave2
 Copies your public key (~/.ssh/id_rsa.pub) to the slave's ~/.ssh/authorized_keys.
 
+//
 *Making sure that the SSH agent is running and the key is loaded
  eval "$(ssh-agent -s)" --> Starts the agent
  ssh-add ~/.ssh/id_rsa --> Adding private key to the agent
@@ -37,14 +36,14 @@ Here msis is the usernames in slave1 and slave2.
 
 *Now SSH passwordless connection can be checked. 
 
+\\
+
 
 2. NFS setup
 
 1. Install NFS Packages on all nodes (master and slaves)
 sudo apt update
-sudo apt install nfs-kernel-server nfs-common -y (on master)
-nfs-kernel-server: Required only on the master (NFS server)
-nfs-common: Required on slaves (NFS clients)
+>>sudo apt install nfs-kernel-server nfs-common -y (on master)
 
 2.Create a Shared Directory on master
 sudo mkdir -p /nfs/shared
@@ -52,22 +51,19 @@ sudo chmod 777 /nfs/shared
 
 3.Configure NFS Exports
 Edit the NFS exports file on the master
-sudo nano /etc/exports
-Add the following lines
+>> sudo nano /etc/exports
 /nfs/shared 172.18.181.61(rw,sync,no_subtree_check)
 /nfs/shared 172.18.181.53(rw,sync,no_subtree_check)
 
 4. Export the Shared Directory
-Apply and verify the configuration
-sudo exportfs -a
-sudo systemctl restart nfs-kernel-server
-sudo exportfs -v
+>> sudo exportfs -a
+>> sudo systemctl restart nfs-kernel-server
+>> sudo exportfs -v
 
 5. Mount the NFS Share on Slave Nodes
 On slave1
-sudo mkdir -p /nfs/shared
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-sudo mount 172.18.181.65{master}:/nfs/shared /nfs/shared
+>> sudo mkdir -p /nfs/shared
+>> sudo mount 172.18.181.65{master}:/nfs/shared /nfs/shared
 On slave2
 sudo mkdir -p /nfs/shared
 sudo mount 172.18.181.65:/nfs/shared /nfs/shared
@@ -75,11 +71,6 @@ sudo mount 172.18.181.65:/nfs/shared /nfs/shared
 6. Verify the Mount
 Run on any slave
 df -h | grep nfs
-Output would be  172.18.181.65:/nfs/shared   100G   2G   98G   2% /nfs/shared
-Test by creating a file from one slave and checking its visibility on others
-cd /nfs/shared
-touch testfile_from_slave1
-Check if it appears in /nfs/shared on master or slave2.
 
 
 3. Web services
