@@ -15,7 +15,7 @@ spec:
         app: tomcat
     spec:
       containers:
-      - name: labmaven
+      - name: tomcat
         image: dvasanth26/lab_tomcat:v1
         ports:
         - containerPort: 8080
